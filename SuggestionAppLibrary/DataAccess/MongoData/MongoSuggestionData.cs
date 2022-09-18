@@ -114,7 +114,7 @@ public class MongoSuggestionData : ISuggestionData
             var suggestionsTransaction = db.GetCollection<SuggestionModel>(_db.SuggestionCollectionName);
             await suggestionsTransaction.InsertOneAsync(suggestion);
 
-            var userInTranscation = db.GetCollection<UserModel>(_db.SuggestionCollectionName);
+            var userInTranscation = db.GetCollection<UserModel>(_db.UserCollectionName);
             var user = await _userData.GetUserByIdAsync(suggestion.Author.Id);
 
             user.AuthorSuggestions.Add(new BasicSuggestionModel(suggestion));
