@@ -1,7 +1,79 @@
 ﻿@page "/"
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ICategoryData categoryData
+@inject ISuggestionData suggestionData
+@inject IStatusData statusData
+@inject IUserData userData
+@inject NavigationManager navManager
+@inject ProtectedSessionStorage sessionStorage
 
-<PageTitle>Index</PageTitle>
-
-<h1>Hello, world!</h1>
-
-Welcome to your new app.
+<h1>Training Suggestions</h1>
+<div>
+    <button>Suggest</button>
+</div>
+<div>
+    <div>@suggestions?.Count Suggestions</div>
+    <div>
+        <button @onclick="(() => OrderByNew(true))">New</button>
+        <button @onclick="(() => OrderByNew(false))">Popular</button>
+    </div>
+    <div>
+        <input type="text" placeholder="Search" aria-label="Search box"
+               @oninput="((txt) => OnSearchInput((string)txt.Value))"/>
+    </div>
+</div>
+<div>
+    <div>
+        @if(suggestions is not null)
+        {
+            <Virtualize Items="@suggestions" Context="s" OverscanCount="10">
+                <div>
+                    <div>@GetUpvoteTopText(s)</div>
+                    <span class="oi oi-caret-top"></span>
+                    <div>@GetUpvoteBottomText(s)</div>
+                </div>
+                <div>
+                    <div @onclick="(() => OpenDetails(s))">
+                        @s.Suggestion
+                    </div>
+                    <div @onclick="(() => OpenDetails(s))">
+                        @s.Category?.Name
+                    </div>
+                </div>
+                <div>
+                    <div>
+                        @s.SuggestionStatus?.Name
+                    </div>
+                </div>
+            </Virtualize>
+        }
+    </div>
+    <div>
+        @if(categories is not null)
+        {
+            <div>
+                <span>Category</span>
+                <div @onclick="(() => OnCategoryClick())">All</div>
+                @foreach(var c in categories)
+                {
+                    <div @onclick="(() => OnCategoryClick(c.Name))">
+                        @c.Name
+                    </div>
+                }
+            </div>
+        }
+        @if(status is not null)
+        {
+            <div>
+                <span>Status</span>
+                <div @onclick="(() => OnStatusClick())">All</div>
+                @foreach(var s in status)
+                {
+                    <div @onclick="(() => OnCategoryClick(s.Name))">
+                        @s.Name
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>

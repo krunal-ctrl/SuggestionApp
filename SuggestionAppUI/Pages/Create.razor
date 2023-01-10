@@ -1,0 +1,49 @@
+﻿@page "/Create"
+@using SuggestionAppUI.Components
+@inject ICategoryData categoryData
+@inject ISuggestionData suggestionData
+@inject NavigationManager navManager
+@inject IUserData userData
+<h1>Make A Suggestion</h1>
+<div>
+    <div>
+        <div>
+            <button @onclick="ClosePage"></button>
+        </div>
+        @if(categories is not null)
+        {
+            <EditForm Model="suggestion" OnValidSubmit="CreateSuggestion">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <div>
+                    <label for="suggestion-text">Suggestion</label>
+                    <div>Focus on topic or technology you want to learn about.</div>
+                    <InputText id="suggestion-text" @bind-Value="suggestion.Suggestion" />
+                </div>
+
+                <div>
+                    <label for="description">Description</label>
+                    <div>Briefly describe you suggestion.</div>
+                    <InputText id="description" @bind-Value="suggestion.Description" />
+                </div>
+
+                <div>
+                    <label for="category">Category</label>
+                    <div>Chose one category.</div>
+                    <MyInputRadioGroup id="category" @bind-Value="suggestion.CategoryId">
+                        @foreach(var c in categories)
+                        {
+                            <div>
+                                <InputRadio Value="@c.Id" id="@c.Id" />
+                                <label for="@c.Id">@c.Name - @c.Description</label>
+                            </div>
+                        }
+                </MyInputRadioGroup>
+                </div>
+                <div>
+                    <button type="submit">Suggest</button>
+                </div>
+            </EditForm>
+        }
+    </div>
+</div>
